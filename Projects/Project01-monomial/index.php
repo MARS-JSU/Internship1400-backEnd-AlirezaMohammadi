@@ -13,11 +13,11 @@
     <div id="wrapper">
         <div class="overlay">
             <div class="desc">
-                <form action="">
-                    <label for="polynomial-input">Enter your polynomial</label>
-                    <input id="polynomial-input" type="text" placeholder="ex : 2.2x+4x-2x-9">
+                <div id="form" >
+                    <label for="polynomial">Enter your polynomial</label>
+                    <input id="polynomial" name="polynomial" type="text" placeholder="ex : 2.2x+4x-2x-9">
                     <button type="submit">submit</button>
-                </form>
+                </div>
                 <div class="solve">
                     <div>
                         <p>Answer : </p>
@@ -27,6 +27,9 @@
             </div>
         </div>
     </div>
+
+    <script src="./js/jquery.min.js"></script>
+    <script src="./js/ajaxRequest.js"></script>
 </body>
 
 </html>
