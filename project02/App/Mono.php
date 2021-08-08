@@ -4,182 +4,112 @@ namespace App;
 
 class Mono {
 
-    private $coefficient;
-    private $power;
-    private $derivativeCoefficient;
-    private $derivativePower;
-    private $sent;
+    private float $coefficient;
+    private float $power;
+    private bool $sent;
 
-    public function getCoefficient() {
+    public function getCoefficient() :float {
         return $this->coefficient;
     }
 
-    public function setCoefficient($coefficient) {
+    public function setCoefficient($coefficient) :void {
         $this->coefficient = $coefficient;
     }
 
-    public function getPower() {
+    public function getPower() :float {
         return $this->power;
     }
 
-    public function setPower($power) {
+    public function setPower($power) :void {
         $this->power = $power;
     }
 
-    public function getDerivativeCoefficient() {
-        return $this->derivativeCoefficient;
-    }
-
-    public function setDerivativeCoefficient($derivativeCoefficient) {
-        $this->derivativeCoefficient = $derivativeCoefficient;
-    }
-
-    public function getDerivativePower() {
-        return $this->derivativePower;
-    }
-
-    public function setDerivativePower($derivativePower) {
-        $this->derivativePower = $derivativePower;
-    }
-
-    public function setSent(bool $sent){
+    public function setSent(bool $sent):void {
         $this->sent = $sent;
     }
 
-    public function getSent() {
+    public function getSent():bool {
         return $this->sent;
     }
 
     public function __construct(float $coefficient, float $power) {
         $this->setCoefficient($coefficient);
         $this->setPower($power);
-
-        $this->setDerivativeCoefficient($this->getCoefficient() * $this->getPower());
-        $this->setDerivativePower($this->getPower() - 1);
-
         $this->setSent(false);
     }
 
-    public function printPhrase() {
+    public function toString() :string {
         $coefficient = $this->coefficient;
         $power = $this->power;
 
-        if ($coefficient == 1) {
-            echo '+';
-            if($power == 0){
-                echo 1;
-                return 1;
-            }else if ($power == 1) {
-                echo 'x';
-                return 1;
-            } elseif ($power > 1) {
-                echo 'x^' . $power;
-                return 1;
-            }
-        } elseif ($coefficient == -1) {
-            echo '-';
-            if($power == 0){
-                echo 1;
-                return 1;
-            }else if ($power == 1) {
-                echo 'x';
-                return 1;
-            } elseif ($power > 1) {
-                echo 'x^' . $power;
-                return 1;
-            }
-        } elseif ($coefficient < 0) {
-            echo $coefficient;
-            if ($power == 1) {
-                echo 'x';
-                return 1;
-            } elseif ($power > 1) {
-                echo 'x^' . $power;
-                return 1;
-            }
-        } elseif ($coefficient > 0) {
-            echo '+' . $coefficient;
-            if ($power == 1) {
-                echo 'x';
-                return 1;
-            } elseif ($power > 1) {
-                echo 'x^' . $power;
-                return 1;
-            }
-        }
-        return 0;
-    }
-
-    public function printDerivativePhrase() {
-        $coefficient = $this->derivativeCoefficient;
-        $power = $this->derivativePower;
+        $answer = '';
 
         if ($coefficient == 1) {
-            echo '+';
+            $answer .= '+';
             if($power == 0){
-                echo 1;
-                return 1;
+                $answer .= '1';
             }else if ($power == 1) {
-                echo 'x';
-                return 1;
+                $answer .= 'x';
             } elseif ($power > 1) {
-                echo 'x^' . $power;
-                return 1;
+                $answer .= 'x^' . "$power";
             }
         } elseif ($coefficient == -1) {
-            echo '-';
-            if ($power == 1) {
-                echo 'x';
-                return 1;
+            $answer .= '-';
+            if($power == 0){
+                $answer .= 1;
+            }else if ($power == 1) {
+                $answer .= 'x';
             } elseif ($power > 1) {
-                echo 'x^' . $power;
-                return 1;
+                $answer .= 'x^' . "$power";
             }
         } elseif ($coefficient < 0) {
-            echo $coefficient;
+            $answer .= "$coefficient";
             if ($power == 1) {
-                echo 'x';
-                return 1;
+                $answer .= 'x';
             } elseif ($power > 1) {
-                echo 'x^' . $power;
-                return 1;
+                $answer .= 'x^' . "$power";
             }
         } elseif ($coefficient > 0) {
-            echo '+' . $coefficient;
+            $answer .= '+' . "$coefficient";
             if ($power == 1) {
-                echo 'x';
-                return 1;
+                $answer .= 'x';
             } elseif ($power > 1) {
-                echo 'x^' . $power;
-                return 1;
+                $answer .= 'x^' . "$power";
             }
         }
-        return 0;
+
+        return $answer;
     }
 
-    public function solve($n) {
-        return $this->coefficient * $n ** $this->power;
+    public function derivative() :Mono {
+        $coefficient = $this->coefficient * $this->power;
+        $power = $this->power - 1;
+
+        return (new Mono($coefficient, $power));
     }
 
-    public function sum(Mono $a) {
-        $coefficient = floatval($a->coefficient) + floatval($this->coefficient);
-        $power = floatval($this->power);
+    public function answerForValue(float $value) :float {
+        return $this->coefficient * ($value ** $this->power);
+    }
+
+    public function sum(Mono $a) :string {
+        $coefficient = $a->getCoefficient() + $this->getCoefficient();
+        $power = $this->getPower();
         
         return $coefficient.'x^'.$power;
     }
 
-    public function submission(Mono $a) {
-        $coefficient = floatval($this->coefficient) - floatval($a->coefficient);
-        $power = floatval($this->power);
+    public function submission(Mono $a) :string {
+        $coefficient = $this->getCoefficient() - $a->getCoefficient();
+        $power = $this->getPower();
         
         return $coefficient.'x^'.$power;
     }
 
-    public function multiplication(Mono $a) {
-        $coefficient = floatval($a->getCoefficient()) * floatval($this->getCoefficient());
-        $power = floatval($a->getPower()) + floatval($this->getPower());
+    public function multiplication(Mono $a) :string {
+       $coefficient = $a->getCoefficient() * $this->getCoefficient();
+       $power = $a->getPower() + $this->getPower();
         
-        return $coefficient.'x^'.$power;
+       return $coefficient.'x^'.$power;
     }
-
 }

@@ -2,43 +2,32 @@
 
 use App\Poly;
 use App\Mono;
-use App\Processing;
-echo '<pre>';
+use App\Analysing;
 
 
 include './vendor/autoload.php';
 
-$pross = (new Processing('2x-3x^5-4x^5-7x+2+6x'))->initialize();
-$pross2 = (new Processing('2x-x^5-4x^5-3+7x+2+6x'))->initialize();
+$p = (new Analysing('2x-3x^5-4x^5-7x+2+6x'))->getPoly();
+$p2 = (new Analysing('2x-x^5-4x^5-3+7x+2+6x'))->getPoly();
 
-$p = new Poly($pross);
-$p2 = new Poly($pross2);
+$n = 2;
 
-$p->makeMonos();
-$p2->makeMonos();
-
-echo $p->printPhrase();
+echo 'first equation: ' . $p->toString();
+echo '<br>';
+echo "answer for ($n): " . $p->answerForValue($n);
+echo '<br>';
+echo 'first derivative: ' . ($p->derivative())->toString();
 echo '<hr>';
-echo $p->printDerivativePhrase();
+echo 'second equation: ' . $p2->toString();
+echo '<br>';
+echo "answer for ($n): " . $p2->answerForValue($n);
+echo '<br>';
+echo 'second derivative: ' . ($p2->derivative())->toString();
+
 echo '<hr>';
-echo $p2->printPhrase();
-echo '<hr>';
-echo $p2->printDerivativePhrase();
-echo '<hr>';
 
-($p->multiplication($p2))->printPhrase();
-echo '<hr>';
-($p->sum($p2))->printPhrase();
-echo '<hr>';
-($p->submission($p2))->printPhrase();
-
-
-
-
-
-
-
-
-
-
-echo '</pre>';
+echo 'multiplication: ' . ($p->multiplication($p2))->toString();
+echo '<br>';
+echo 'sum: ' . ($p->sum($p2))->toString();
+echo '<br>';
+echo 'submission: ' . ($p->submission($p2))->toString();
