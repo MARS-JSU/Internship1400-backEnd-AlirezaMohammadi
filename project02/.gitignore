@@ -1,6 +1,6 @@
 
-# Created by https://www.toptal.com/developers/gitignore/api/composer,visualstudiocode
-# Edit at https://www.toptal.com/developers/gitignore?templates=composer,visualstudiocode
+# Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode,composer
+# Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode,composer
 
 ### Composer ###
 composer.phar
@@ -26,4 +26,4 @@ composer.phar
 .history
 .ionide
 
-# End of https://www.toptal.com/developers/gitignore/api/composer,visualstudiocode
+# End of https://www.toptal.com/develop

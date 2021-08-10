@@ -6,36 +6,21 @@ class Mono {
 
     private float $coefficient;
     private float $power;
-    private bool $sent;
 
-    public function getCoefficient() :float {
-        return $this->coefficient;
-    }
-
-    public function setCoefficient($coefficient) :void {
+    public function __construct($coefficient, $power)
+    {
         $this->coefficient = $coefficient;
-    }
-
-    public function getPower() :float {
-        return $this->power;
-    }
-
-    public function setPower($power) :void {
         $this->power = $power;
     }
 
-    public function setSent(bool $sent):void {
-        $this->sent = $sent;
+    public function getCoefficient()
+    {
+        return $this->coefficient;
     }
 
-    public function getSent():bool {
-        return $this->sent;
-    }
-
-    public function __construct(float $coefficient, float $power) {
-        $this->setCoefficient($coefficient);
-        $this->setPower($power);
-        $this->setSent(false);
+    public function getPower()
+    {
+        return $this->power;
     }
 
     public function toString() :string {
@@ -81,6 +66,10 @@ class Mono {
         return $answer;
     }
 
+    public function answerForValue(float $value) :float {
+        return $this->coefficient * ($value ** $this->power);
+    }
+
     public function derivative() :Mono {
         $coefficient = $this->coefficient * $this->power;
         $power = $this->power - 1;
@@ -88,28 +77,11 @@ class Mono {
         return (new Mono($coefficient, $power));
     }
 
-    public function answerForValue(float $value) :float {
-        return $this->coefficient * ($value ** $this->power);
-    }
-
-    public function sum(Mono $a) :string {
-        $coefficient = $a->getCoefficient() + $this->getCoefficient();
-        $power = $this->getPower();
-        
-        return $coefficient.'x^'.$power;
-    }
-
-    public function submission(Mono $a) :string {
-        $coefficient = $this->getCoefficient() - $a->getCoefficient();
-        $power = $this->getPower();
-        
-        return $coefficient.'x^'.$power;
-    }
-
-    public function multiplication(Mono $a) :string {
-       $coefficient = $a->getCoefficient() * $this->getCoefficient();
-       $power = $a->getPower() + $this->getPower();
-        
-       return $coefficient.'x^'.$power;
-    }
+    public function multiplication(Mono $a) :Mono 
+    {
+        $coefficient = $this->getCoefficient() * $a->getCoefficient();
+        $power = $this->getPower() + $a->getPower();
+         
+        return new Mono($coefficient, $power);
+     }
 }

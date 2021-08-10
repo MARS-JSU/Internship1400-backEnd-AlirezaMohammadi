@@ -1,33 +1,43 @@
 <?php
+echo '<pre>';
 
-use App\Poly;
-use App\Mono;
-use App\Analysing;
+use App\Analyzor;
 
 
 include './vendor/autoload.php';
 
-$p = (new Analysing('2x-3x^5-4x^5-7x+2+6x'))->getPoly();
-$p2 = (new Analysing('2x-x^5-4x^5-3+7x+2+6x'))->getPoly();
+$str = 'x-2x^3+3x^2-4x^5+6x^5';
+$str2 = '7x-5x^3+4x^2+1-4x^5+x^3';
 
-$n = 2;
+$strA = new Analyzor();
+$strA2 = new Analyzor();
 
-echo 'first equation: ' . $p->toString();
+$poly = $strA->start($str);
+$poly2 = $strA2->start($str2);
+
+echo 'first str : ' . $poly->toString();
 echo '<br>';
-echo "answer for ($n): " . $p->answerForValue($n);
-echo '<br>';
-echo 'first derivative: ' . ($p->derivative())->toString();
+echo 'second str: ' . $poly2->toString();
+
+$x = 1;
+$x2 = 2;
+
 echo '<hr>';
-echo 'second equation: ' . $p2->toString();
+echo "first str value for ($x) : " . $poly->answerForValue($x);
 echo '<br>';
-echo "answer for ($n): " . $p2->answerForValue($n);
-echo '<br>';
-echo 'second derivative: ' . ($p2->derivative())->toString();
+echo "second str value for ($x2): " . $poly2->answerForValue($x2);
 
 echo '<hr>';
+echo "first derivative : " . $poly->derivative()->toString();
+echo '<br>';
+echo "second derivative: " . $poly2->derivative()->toString();
 
-echo 'multiplication: ' . ($p->multiplication($p2))->toString();
+echo '<hr>';
+echo "str1 + str2 : " . $poly->sum($poly2)->toString();
 echo '<br>';
-echo 'sum: ' . ($p->sum($p2))->toString();
+echo "str1 - str2 : " . $poly->submission($poly2)->toString();
 echo '<br>';
-echo 'submission: ' . ($p->submission($p2))->toString();
+echo "str1 × str2 : " . $poly->multiplication($poly2)->toString();
+
+
+echo '</br>';

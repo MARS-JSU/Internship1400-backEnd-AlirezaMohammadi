@@ -6,120 +6,127 @@ use App\Mono;
 
 class Poly{
     
-    private array $poly;
     private array $monos;
-    private float $solve;
 
-    public function __construct(array $poly = []) {
-        $this->setPoly($poly);
-        $this->setSolve(0);
+    function __construct(array $monos = [])
+    {
+        $this->monos = $monos;
     }
 
-    public function makeMonos() :void {
-        $this->splitToMakeArray();
-        $this->simplify();
-        $this->Ordering();
+    public function getMonos()
+    {
+        return $this->monos;
+    }
+    
+    public function addMono(Mono $mono)
+    {
+        array_push($this->monos, $mono);
+    }
 
-        foreach ($this->getPoly() as $mono) {
-            $this->monos[] = new Mono($mono[0],$mono[1]);
+    public function makePoly(array $strings)
+    {
+        $temps = [];
+
+        foreach ($strings as $string) {
+            array_push($temps, explode('x^',$string));
+        }
+
+        foreach ($temps as $temp) {
+            array_push($this->monos, new Mono($temp[0], $temp[1]));
         }
     }
+    
+    public function simplify() :void 
+    {
+        $indexes = [];
 
-    public function splitToMakeArray() :void {
-        foreach ($this->getPoly() as $index => $mono) {
-            $this->poly[$index] = explode('x^', $mono);
-            $this->poly[$index][0] = floatval($this->poly[$index][0]);
-            $this->poly[$index][1] = floatval($this->poly[$index][1]);
-        }
-    }
+        foreach ($this->monos as $index1 => &$mono1) {
+            foreach ($this->monos as $index2 => &$mono2) {
+                if (!in_array($index1, $indexes) &&
+                    !in_array($index2, $indexes) &&
+                    $index1 < $index2 && 
+                    $mono1->getPower() == $mono2->getPower()) {
 
-    public function simplify() :void {
+                    $newCoefficient = $mono1->getCoefficient() + $mono2->getCoefficient();
+                    $newMono = new Mono($newCoefficient, $mono1->getPower());
+                    
+                    $this->monos[$index1] = $newMono;
 
-        foreach ($this->getPoly() as $index1 => $mono1) {
-            foreach ($this->poly as $index2 => $mono2) {
-                if ($index1 < $index2 && $mono1[1] == $mono2[1]) {
-                    $this->poly[$index1][0] += $mono2[0];
-                    $this->poly[$index2][1]='invalid';
+                    $indexes[] = $index2;
                 }
             }
         }
-        foreach ($this->getPoly() as $index => $mono) {
-            if ($mono[1]=='invalid') {
-                unset($this->poly[$index]);
+        
+        foreach ($this->monos as $index => $mono) {
+            if (in_array($index, $indexes)) {
+                unset($this->monos[$index]);
             }
         }
-
-        $this->setPoly(array_values($this->getPoly()));
+        
+        $this->monos = array_values($this->monos);
     }
 
-    public function Ordering() :void {
-        foreach ($this->poly as $key => &$m) {
-            foreach ($this->poly as $key2 => &$m2) {
-                if ($key2 > $key && $m[1] < $m2[1]) {
-                    $temp = $m;
-                    $m = $m2;
-                    $m2 = $temp;
+    public function ordering() :void 
+    {
+        foreach ($this->monos as $index1 => &$mono1) {
+            foreach ($this->monos as $index2 => &$mono2) {
+                if ($index1 < $index2 && 
+                    $mono1->getPower() < $mono2->getPower()) {
+
+                    $temp = $this->monos[$index1];
+                    $this->monos[$index1] = $this->monos[$index2];
+                    $this->monos[$index2] = $temp;
                 }
             }
         }
+        // var_dump($this->monos);
     }
 
-    public function toString() :string {
+    public function toString() :string 
+    {
         
         $polyString = '';
 
-        foreach ($this->getMonos() as $mono) {
+        foreach ($this->monos as $mono) {
             $polyString .= $mono->toString();
         }
        
         return ($polyString) ? $polyString : '0' ;
 
     }
-    
+
+    public function answerForValue(float $value) :float {
+        $answer = 0;
+        foreach ($this->monos as $mono) {
+            $answer += $mono->answerForValue($value);
+        }
+        return $answer;
+    }
+
     public function derivative() :Poly {
         $newPoly = new Poly();
 
-        foreach ($this->getMonos() as $mono) {
-            $newPoly->addMonos($mono->derivative());
+        foreach ($this->monos as $mono) {
+            $newPoly->addMono($mono->derivative());
         }
 
         return $newPoly;
-    }
-
-    public function answerForValue(float $n) :float {
-        foreach ($this->monos as $mono) {
-            $this->solve += $mono->answerForValue($n);
-        }
-        return $this->solve;
     }
 
     public function sum(Poly $poly) :Poly {
 
         $newPoly = new Poly();
 
-        foreach ($this->monos as &$mono1) {
-            foreach ($poly->monos as &$mono2) {
-                if($mono1->getPower() == $mono2->getPower()){
-                    $newPoly->addPoly($mono1->sum($mono2));
-                    $mono1->setSent(true);
-                    $mono2->setSent(true);
-                }
-            }
-        }
-
         foreach ($this->monos as $mono) {
-            if(!$mono->getSent()){
-                $newPoly->addMonos($mono->coefficient.'x^'.$mono->power);                
-            }
+            $newPoly->addMono($mono);                  
         }
 
-        foreach ($poly->getMonos() as $mono) {
-            if(!$mono->getSent()){
-                $newPoly->addMonos($mono->coefficient.'x^'.$mono->power);                
-            }
+        foreach ($poly->monos as $mono) {
+            $newPoly->addMono($mono);                  
         }
 
-        $newPoly->makeMonos();
+        $newPoly->simplify();
+        $newPoly->ordering();
         
         return $newPoly;
     }
@@ -128,29 +135,16 @@ class Poly{
         
         $newPoly = new Poly();
 
-        foreach ($this->getMonos() as &$mono1) {
-            foreach ($poly->getMonos() as &$mono2) {
-                if($mono1->getPower() == $mono2->getPower()){
-                    $newPoly->addPoly($mono1->submission($mono2));
-                    $mono1->setSent(true);
-                    $mono2->setSent(true);
-                }
-            }
+        foreach ($this->monos as $mono) {
+            $newPoly->addMono($mono);    
         }
-
-        foreach ($this->getMonos() as $mono) {
-            if(!$mono->getSent()){
-                $newPoly->addMonos($mono->coefficient.'x^'.$mono->power);                
-            }
+        
+        foreach ($poly->monos as $mono) {
+            $newMono = new Mono(-1 * $mono->getCoefficient(),$mono->getPower());
+            $newPoly->addMono($newMono);                  
         }
-
-        foreach ($poly->getMonos() as $mono) {
-            if(!$mono->getSent()){
-                $newPoly->addMonos((-1*$mono->coefficient).'x^'.$mono->power);                
-            }
-        }
-
-        $newPoly->makeMonos();
+        $newPoly->simplify();
+        $newPoly->ordering();
         
         return $newPoly;
     }
@@ -159,46 +153,15 @@ class Poly{
         
         $newPoly = new Poly();
         
-        foreach ($this->getMonos() as $mono1) {
+        foreach ($this->monos as $mono1) {
             foreach ($poly->getMonos() as $mono2) {
-               $newPoly->addPoly($mono1->multiplication($mono2));
+               $newPoly->addMono($mono1->multiplication($mono2));
             }
         }
 
-        $newPoly->makeMonos();
+        $newPoly->simplify();
+        $newPoly->ordering();
 
         return $newPoly;
-    }
-
-    public function getPoly() :array {
-        return $this->poly;
-    }
-
-    public function setPoly($poly) :void {
-        $this->poly = $poly;
-    }
-
-    public function addPoly($a) :void {
-        $this->poly[] = $a;
-    }
-
-    public function getMonos() :array {
-        return $this->monos;
-    }
-
-    public function setMonos($monos) :void {
-        $this->monos = $monos;
-    }
-
-    public function addMonos($a) :void {
-        $this->monos[] = $a;
-    }
-
-    public function getSolve() :float {
-        return $this->solve;
-    }
-
-    public function setSolve(float $solve) :void {
-        $this->solve = $solve;
     }
 }
