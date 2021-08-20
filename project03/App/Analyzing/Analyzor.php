@@ -1,20 +1,20 @@
 <?php
-namespace App;
+namespace App\Analyzing;
 
-use App\Mono;
-use App\Poly;
-use App\MyString;
+use App\Types\Mono;
+use App\Types\Poly;
+use App\Analyzing\RebuildString;
 
 class Analyzor {
     public function __construct(
         private Poly $poly,
-        private MyString $myString,
+        private RebuildString $myString,
         private array $strings = []
     ) {}
     
-    public function getPolyFromText(string $inputText) :Poly 
+    public function getPolyFromText(string $text) :Poly 
     {
-        $text = $this->myString->rebuild($inputText);
+        $text = $this->myString->getNewString($text);
 
         $this->explodeFromSpace($text);
         $this->repairPowers();

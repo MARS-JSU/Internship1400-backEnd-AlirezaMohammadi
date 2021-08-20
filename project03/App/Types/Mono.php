@@ -1,14 +1,14 @@
 <?php
 
-namespace App;
+namespace App\Types;
 
-use App\Contracts\MustHaveToString;
+use App\Contracts\CusotmType;
 
-class Mono implements MustHaveToString
+class Mono implements CusotmType
 {
     public function __construct(
-        private float $coefficient, 
-        private float $power
+        private float $coefficient = 0, 
+        private float $power = 0
     ) {}
 
     public function getCoefficient()
@@ -21,47 +21,46 @@ class Mono implements MustHaveToString
         return $this->power;
     }
 
-    public function toString() :string 
+    public function __toString() :string 
     {
         $coefficient = $this->coefficient;
         $power = $this->power;
-
-        $answer = '';
+        $toString = '';
 
         if ($coefficient == 1) {
-            $answer .= '+';
+            $toString .= '+';
             if($power == 0){
-                $answer .= '1';
+                $toString .= '1';
             }else if ($power == 1) {
-                $answer .= 'x';
+                $toString .= 'x';
             } elseif ($power > 1) {
-                $answer .= 'x^' . "$power";
+                $toString .= 'x^' . "$power";
             }
         } elseif ($coefficient == -1) {
-            $answer .= '-';
+            $toString .= '-';
             if($power == 0){
-                $answer .= 1;
+                $toString .= 1;
             }else if ($power == 1) {
-                $answer .= 'x';
+                $toString .= 'x';
             } elseif ($power > 1) {
-                $answer .= 'x^' . "$power";
+                $toString .= 'x^' . "$power";
             }
         } elseif ($coefficient < 0) {
-            $answer .= "$coefficient";
+            $toString .= "$coefficient";
             if ($power == 1) {
-                $answer .= 'x';
+                $toString .= 'x';
             } elseif ($power > 1) {
-                $answer .= 'x^' . "$power";
+                $toString .= 'x^' . "$power";
             }
         } elseif ($coefficient > 0) {
-            $answer .= '+' . "$coefficient";
+            $toString .= '+' . "$coefficient";
             if ($power == 1) {
-                $answer .= 'x';
+                $toString .= 'x';
             } elseif ($power > 1) {
-                $answer .= 'x^' . "$power";
+                $toString .= 'x^' . "$power";
             }
         }
 
-        return $answer;
+        return $toString;
     }
 }
