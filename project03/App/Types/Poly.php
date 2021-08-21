@@ -1,10 +1,10 @@
 <?php
 namespace App\Types;
 
-use App\Contracts\CusotmType;
+use App\Contracts\CusotmTypeInterface;
 use App\Types\Mono;
 
-class Poly implements CusotmType
+class Poly implements CusotmTypeInterface
 {
     function __construct(
         private array $monos = []
@@ -20,11 +20,14 @@ class Poly implements CusotmType
         array_push($this->monos, $mono);
     }
 
+    public function setMonos(array $monos)
+    {
+        $this->monos =  $monos;
+    }
+
     public function makePoly(array $monos)
     {
-        foreach ($monos as $mono) {
-            $this->addMono($mono);
-        }
+        $this->setMonos($monos);
     }
     
     public function simplify() 
@@ -71,9 +74,14 @@ class Poly implements CusotmType
         return ($polyString) ? $polyString : '0' ;
     }
 
-    public function empty()
+    public function getNegative() :Poly
     {
-        unset($this->monos);
-        $this->monos = [];
+        $negativePoly = new Poly();
+
+        foreach ($this->monos as $mono) {
+            $negativePoly->monos[] = $mono->getNegative();
+        }
+
+        return $negativePoly;
     }
 }

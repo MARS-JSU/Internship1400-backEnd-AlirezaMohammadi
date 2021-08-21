@@ -2,9 +2,9 @@
 
 namespace App\Types;
 
-use App\Contracts\CusotmType;
+use App\Contracts\CusotmTypeInterface;
 
-class Mono implements CusotmType
+class Mono implements CusotmTypeInterface
 {
     public function __construct(
         private float $coefficient = 0, 
@@ -62,5 +62,10 @@ class Mono implements CusotmType
         }
 
         return $toString;
+    }
+
+    public function getNegative()
+    {
+        return new Mono(-1 * $this->coefficient, $this->power);
     }
 }

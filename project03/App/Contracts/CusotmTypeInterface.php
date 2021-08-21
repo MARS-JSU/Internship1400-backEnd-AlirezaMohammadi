@@ -1,7 +1,8 @@
 <?php
 namespace App\Contracts;
 
-interface CusotmType
+interface CusotmTypeInterface
 {
     public function __toString() :string;
+    public function getNegative();
 }

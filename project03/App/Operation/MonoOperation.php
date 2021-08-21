@@ -1,9 +1,9 @@
 <?php
-namespace App\Operations;
+namespace App\Operation;
 
 use App\Types\Mono;
 
-class MonoOperations
+class MonoOperation
 {
     public function answerForValue(Mono $mono, float $value) :float 
     {   
