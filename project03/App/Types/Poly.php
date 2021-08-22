@@ -19,16 +19,6 @@ class Poly implements CusotmTypeInterface
     {
         array_push($this->monos, $mono);
     }
-
-    public function setMonos(array $monos)
-    {
-        $this->monos =  $monos;
-    }
-
-    public function makePoly(array $monos)
-    {
-        $this->setMonos($monos);
-    }
     
     public function simplify() 
     {

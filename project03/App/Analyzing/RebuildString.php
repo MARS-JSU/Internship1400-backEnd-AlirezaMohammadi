@@ -3,10 +3,6 @@ namespace App\Analyzing;
 
 class RebuildString
 {
-    public function __construct(
-        private string $string = ''
-    ) {}
-
     public function getNewString(String $string) :string
     {
         $this->string = $string;

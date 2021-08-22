@@ -7,14 +7,17 @@ use Exception;
 
 class Operation implements MathOperationInterface
 {
-    function __construct(
-        private CusotmTypeInterface $cusotmType,
-        private PolyOperation $polyOperation,
-        private MonoOperation $monoOperation,
-    ){}
+    private PolyOperation $polyOperation;
+    private MonoOperation $monoOperation;
+
+    function __construct()
+    {
+        $this->polyOperation = new PolyOperation();
+        $this->monoOperation = new MonoOperation();
+    }
 
     public function answerForValue(CusotmTypeInterface $cusotmTypeInterface, float $value) :float 
-    {  
+    {
         if($cusotmTypeInterface::class == 'App\Types\Poly'){
             return $this->polyOperation->answerForValue($cusotmTypeInterface, $value);
         }

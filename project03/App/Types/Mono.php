@@ -64,7 +64,7 @@ class Mono implements CusotmTypeInterface
         return $toString;
     }
 
-    public function getNegative()
+    public function getNegative() :Mono
     {
         return new Mono(-1 * $this->coefficient, $this->power);
     }

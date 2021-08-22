@@ -15,7 +15,7 @@ class MonoOperation
         $coefficient = $mono->getCoefficient() * $mono->getPower();
         $power = $mono->getPower() - 1;
 
-        return (new Mono($coefficient, $power));
+        return new Mono($coefficient, $power);
     }
 
     public function mul(Mono $mono1, Mono $mono2) :Mono 

@@ -7,10 +7,12 @@ use App\Operation\MonoOperation;
 
 class PolyOperation
 {
-    function __construct(
-        private Poly $poly,
-        private MonoOperation $monoOperation
-    ){}
+    private MonoOperation $monoOperation;
+
+    function __construct()
+    {
+        $this->monoOperation = new MonoOperation();
+    }
 
     public function answerForValue(Poly $poly, float $value) :float 
     {  
@@ -23,52 +25,45 @@ class PolyOperation
 
     public function derivative(Poly $poly) :Poly 
     {
-        $this->poly->setMonos([]);
+        $derivativePoly = new Poly();
 
         foreach ($poly->getMonos() as $mono) {
-            $this->poly->addMono($this->monoOperation->derivative($mono));
+            $derivativePoly->addMono($this->monoOperation->derivative($mono));
         }
 
-        return clone $this->poly;
+        return $derivativePoly;
     }
 
     public function sum(Poly $poly1, Poly $poly2) :Poly 
     {
-        $newMonos = [...$poly1->getMonos(), ...$poly2->getMonos()];               
-        
-        $this->poly->setMonos($newMonos);
+        $newPoly = new Poly([...$poly1->getMonos(), ...$poly2->getMonos()]);
 
-        $this->poly->simplify();
-        $this->poly->ordering();
+        $newPoly->simplify();
         
-        return clone $this->poly;
+        return $newPoly;
     }
 
     public function sub(Poly $poly1, Poly $poly2) :Poly 
     {        
-        $newMonos = [...$poly1->getMonos(), ...$poly2->getNegative()->getMonos()];                
+        $newPoly = new Poly([...$poly1->getMonos(), ...$poly2->getNegative()->getMonos()]);
 
-        $this->poly->setMonos($newMonos);
-
-        $this->poly->simplify();
-        $this->poly->ordering();
+        $newPoly->simplify();
         
-        return clone $this->poly;
+        return $newPoly;
     }
 
     public function mul(Poly $poly1, Poly $poly2) :Poly 
     {
-        $this->poly->setMonos([]);
+        $newPoly = new Poly();
 
         foreach ($poly1->getMonos() as $mono1) {
             foreach ($poly2->getMonos() as $mono2) {
-               $this->poly->addMono($this->monoOperation->mul($mono1, $mono2));
+               $newPoly->addMono($this->monoOperation->mul($mono1, $mono2));
             }
         }
 
-        $this->poly->simplify();
-        $this->poly->ordering();
+        $newPoly->simplify();
 
-        return clone $this->poly;
+        return $newPoly;
     }
 }
