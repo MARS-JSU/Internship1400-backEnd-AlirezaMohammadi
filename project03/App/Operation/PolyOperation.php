@@ -1,11 +1,13 @@
 <?php
 namespace App\Operation;
 
-use App\Types\Mono;
+use App\Contracts\CusotmTypeInterface;
+use App\Contracts\MathOperationInterface;
 use App\Types\Poly;
 use App\Operation\MonoOperation;
+use Exception;
 
-class PolyOperation
+class PolyOperation implements MathOperationInterface
 {
     private MonoOperation $monoOperation;
 
@@ -14,8 +16,10 @@ class PolyOperation
         $this->monoOperation = new MonoOperation();
     }
 
-    public function answerForValue(Poly $poly, float $value) :float 
+    public function answerForValue(CusotmTypeInterface $poly, float $value) :float 
     {  
+        $this->checkType($poly);
+
         $answer = 0;
         foreach ($poly->getMonos() as $mono) {
             $answer += $this->monoOperation->answerForValue($mono, $value);
@@ -23,8 +27,10 @@ class PolyOperation
         return $answer;    
     }
 
-    public function derivative(Poly $poly) :Poly 
+    public function derivative(CusotmTypeInterface $poly) :Poly 
     {
+        $this->checkType($poly);
+
         $derivativePoly = new Poly();
 
         foreach ($poly->getMonos() as $mono) {
@@ -34,8 +40,10 @@ class PolyOperation
         return $derivativePoly;
     }
 
-    public function sum(Poly $poly1, Poly $poly2) :Poly 
+    public function sum(CusotmTypeInterface $poly1, CusotmTypeInterface $poly2) :Poly 
     {
+        $this->checkType($poly1, $poly2);
+
         $newPoly = new Poly([...$poly1->getMonos(), ...$poly2->getMonos()]);
 
         $newPoly->simplify();
@@ -43,8 +51,10 @@ class PolyOperation
         return $newPoly;
     }
 
-    public function sub(Poly $poly1, Poly $poly2) :Poly 
+    public function sub(CusotmTypeInterface $poly1, CusotmTypeInterface $poly2) :Poly 
     {        
+        $this->checkType($poly1, $poly2);
+
         $newPoly = new Poly([...$poly1->getMonos(), ...$poly2->getNegative()->getMonos()]);
 
         $newPoly->simplify();
@@ -52,8 +62,10 @@ class PolyOperation
         return $newPoly;
     }
 
-    public function mul(Poly $poly1, Poly $poly2) :Poly 
+    public function mul(CusotmTypeInterface $poly1, CusotmTypeInterface $poly2) :Poly 
     {
+        $this->checkType($poly1, $poly2);
+
         $newPoly = new Poly();
 
         foreach ($poly1->getMonos() as $mono1) {
@@ -65,5 +77,15 @@ class PolyOperation
         $newPoly->simplify();
 
         return $newPoly;
+    }
+
+    private function checkType($type1, $type2 = false)
+    {
+        if(
+            $type1::class != 'App\Types\Poly' ||
+            ($type2 && $type2::class != 'App\Types\Poly')
+        ){
+            throw new Exception('argument must be type of App\Types\Poly');
+        }
     }
 }

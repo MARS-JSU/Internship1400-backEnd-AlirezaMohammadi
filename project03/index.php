@@ -1,9 +1,6 @@
 <?php
 
 use App\Analyzing\Analyzor;
-use App\Analyzing\RebuildString;
-use App\Types\Poly;
-use App\Operation\Operation;
 use App\Operation\PolyOperation;
 
 include './vendor/autoload.php';
@@ -21,8 +18,6 @@ echo PHP_EOL;
 echo 'first str : ' . $poly;
 echo PHP_EOL;
 echo 'second str: ' . $poly2;
-
-echo PHP_EOL;
 echo PHP_EOL;
 
 
@@ -35,11 +30,12 @@ $poly2->ordering();
 echo PHP_EOL;
 echo 'second str : ' . $poly2;
 
-$operation = new Operation();
+$operation = new PolyOperation();
 
 $x = 1;
 $x2 = 2;
 
+echo PHP_EOL;
 echo PHP_EOL;
 echo PHP_EOL;
 echo "first str value for ($x) : " . $operation->answerForValue($poly, $x);

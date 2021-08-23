@@ -6,17 +6,13 @@ use App\Types\Poly;
 use App\Analyzing\RebuildString;
 
 class Analyzor {
-    private RebuildString $RebuildString;
-    private array $strings;
-
-    public function __construct() {
-        $this->RebuildString = new RebuildString();
-        $this->strings = [];
-    }
+    public function __construct(
+        private array $strings = []
+    ){}
     
     public function getPolyFromText(string $text) :Poly 
     {
-        $text = $this->RebuildString->getNewString($text);
+        $text = (new RebuildString())->getNewString($text);
 
         $this->explodeFromSpace($text);
         $this->repairPowers();
