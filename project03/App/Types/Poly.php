@@ -2,9 +2,10 @@
 namespace App\Types;
 
 use App\Contracts\CusotmTypeInterface;
+use App\Contracts\PolyInterface;
 use App\Types\Mono;
 
-class Poly implements CusotmTypeInterface
+class Poly implements CusotmTypeInterface, PolyInterface
 {
     function __construct(
         private array $monos = []

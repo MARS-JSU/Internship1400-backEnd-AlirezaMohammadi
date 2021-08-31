@@ -3,8 +3,9 @@
 namespace App\Types;
 
 use App\Contracts\CusotmTypeInterface;
+use App\Contracts\MonoInterface;
 
-class Mono implements CusotmTypeInterface
+class Mono implements CusotmTypeInterface, MonoInterface
 {
     public function __construct(
         private float $coefficient = 0, 
