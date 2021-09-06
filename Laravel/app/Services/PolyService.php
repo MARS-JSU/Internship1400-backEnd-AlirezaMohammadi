@@ -7,13 +7,16 @@ use App\Http\Controllers\V1\Types\Poly;
 
 class PolyService
 {
+    public function __construct(
+        private Poly $poly
+    ){}
+
     public function makePolyByRequestMonos(Request $request, string $monosName = 'monos') :Poly
     {
-        $poly = new Poly();
         foreach ($request->$monosName as $mono) {
-            $poly->addMono(new Mono($mono['coefficient'],$mono['power']));
+            $this->poly->addMono(new Mono($mono['coefficient'],$mono['power']));
         }   
-        return $poly;
+        return $this->poly;
     }
 
     public function getArrayMonos(Poly $poly) :array

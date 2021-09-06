@@ -3,7 +3,7 @@ namespace App\Services;
 
 class ValidationService
 {
-    public function isValid(null|string $string)
+    public function isValid(string $string)
     {
         if(
             $string &&

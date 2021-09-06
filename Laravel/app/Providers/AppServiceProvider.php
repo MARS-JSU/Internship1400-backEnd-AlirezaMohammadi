@@ -25,9 +25,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->app->scoped(AnalyzingService::class, function($app){
-            return new AnalyzingService($app->make(Poly::class));
-        });
         
     }
 }
