@@ -7,12 +7,18 @@ include './vendor/autoload.php';
 
 $str = 'x-2x^3+3x^2-4x^5+6x^5';
 $str2 = '7x-5x^3+4x^2+1-4x^5+x^3';
+$str3 = 'x';
 
 $strA = new Analyzor();
 $strA2 = new Analyzor();
+$strA3 = new Analyzor();
 
 $poly = $strA->getPolyFromText($str);
 $poly2 = $strA2->getPolyFromText($str2);
+$poly3 = $strA3->getPolyFromText($str3);
+
+// echo count($poly3->getMonos());
+// die();
 
 echo PHP_EOL;
 echo 'first str : ' . $poly;

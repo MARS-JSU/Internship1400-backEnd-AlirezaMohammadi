@@ -23,17 +23,16 @@ class Poly implements CusotmTypeInterface, PolyInterface
     
     public function simplify() 
     {
-        foreach ($this->monos as $index1 => &$mono1) {
-            foreach ($this->monos as $index2 => &$mono2) {
+        for ($i=0; $i < count($this->monos); $i++) { 
+            for ($j=$i+1; $j < count($this->monos); $j++) { 
                 if (
-                    $mono1 &&
-                    $mono2 &&
-                    $index1 < $index2 && 
-                    $mono1->getPower() == $mono2->getPower()
+                    $this->monos[$i] &&
+                    $this->monos[$j] &&
+                    $this->monos[$i]->getPower() == $this->monos[$j]->getPower()
                 ){
-                    $newCoefficient = $mono1->getCoefficient() + $mono2->getCoefficient();
-                    $mono1 = new Mono($newCoefficient, $mono1->getPower());
-                    $mono2 = null;
+                    $newCoefficient = $this->monos[$i]->getCoefficient() + $this->monos[$j]->getCoefficient();
+                    $this->monos[$i] = new Mono($newCoefficient, $this->monos[$i]->getPower());
+                    $this->monos[$j] = null;
                 }
             }
         }
@@ -42,15 +41,14 @@ class Poly implements CusotmTypeInterface, PolyInterface
 
     public function ordering() 
     {
-        foreach ($this->monos as $index1 => &$mono1) {
-            foreach ($this->monos as $index2 => &$mono2) {
+        for ($i=0; $i < count($this->monos); $i++) { 
+            for ($j=$i+1; $j < count($this->monos); $j++) { 
                 if (
-                    $index1 < $index2 && 
-                    $mono1->getPower() < $mono2->getPower()
+                    $this->monos[$i]->getPower() < $this->monos[$j]->getPower()
                 ) {
-                    $temp = $mono1;
-                    $mono1 = $mono2;
-                    $mono2 = $temp;
+                    $temp = $this->monos[$i];
+                    $this->monos[$i] = $this->monos[$j];
+                    $this->monos[$j] = $temp;
                 }
             }
         }
