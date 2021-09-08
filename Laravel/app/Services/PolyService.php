@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace App\Services;
 
 use Illuminate\Http\Request;
@@ -7,16 +7,26 @@ use App\Http\Controllers\V1\Types\Poly;
 
 class PolyService
 {
-    public function __construct(
-        private Poly $poly
-    ){}
+//    public function __construct(
+//        private Poly $poly
+//    ){}
 
-    public function makePolyByRequestMonos(Request $request, string $monosName = 'monos') :Poly
+    public function makePolyByRequestMonos(array $monos) :Poly
     {
+        $newPoly = new Poly();
+        foreach ($monos as $mono) {
+            $newPoly->addMono(new Mono($mono['coefficient'],$mono['power']));
+        }
+        return $newPoly;
+    }
+
+    public function makePolyByRequestMonos2(Request $request, string $monosName = 'monos') :Poly
+    {
+        $newPoly = new Poly();
         foreach ($request->$monosName as $mono) {
-            $this->poly->addMono(new Mono($mono['coefficient'],$mono['power']));
-        }   
-        return $this->poly;
+            $newPoly->addMono(new Mono($mono['coefficient'],$mono['power']));
+        }
+        return $newPoly;
     }
 
     public function getArrayMonos(Poly $poly) :array

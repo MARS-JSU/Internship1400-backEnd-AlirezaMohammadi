@@ -27,11 +27,11 @@ class ProjectServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->app->singleton(AnalyzingService::class, function($app){
-            return new AnalyzingService($app->make(Poly::class));
+            return new AnalyzingService();
         });
 
-        $this->app->scoped(PolyService::class, function($app){
-            return new PolyService($app->make(Poly::class));
+        $this->app->singleton(PolyService::class, function($app){
+            return new PolyService();
         });
     }
 }
