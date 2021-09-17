@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+        <button id="btn-post-request" onclick="sendPostRequest()">
+            send post request
+        </button>
+        <div id="div-post-content">default</div>
+        <button id="btn-get-request" onclick="sendGetRequest()">
+            send get request
+        </button>
+        <div id="div-get-content">default</div>
+    </body>
+    <script>
+        const ServerUrl = "http://127.0.0.1:8000/";
+        const ApiPath = "api/test";
+        const DivPostContent = "div-post-content";
+        const DivGetContent = "div-get-content";
+
+        function sendPostRequest() {
+            let div = document.getElementById(DivPostContent);
+            var xhr = new XMLHttpRequest();
+            let requestData = JSON.stringify({
+                value: "value",
+            });
+            xhr.onreadystatechange = function () {
+                if (this.readyState != 4) {
+                    return;
+                }
+
+                if (this.status == 200) {
+                    var data = this.responseText;
+                    div.innerHTML = data;
+                }
+            };
+            xhr.open("POST", ServerUrl + ApiPath, true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.send(requestData);
+        }
+
+        function sendGetRequest() {
+            let div = document.getElementById(DivGetContent);
+            var xmlHttp = new XMLHttpRequest();
+            let data="?value=value"
+            xmlHttp.onreadystatechange = function () {
+                if (this.readyState != 4) {
+                    return;
+                }
+
+                if (this.status == 200) {
+                    var data = this.responseText;
+                    div.innerHTML = data;
+                }
+            };
+            xmlHttp.open("GET", ServerUrl + ApiPath, true);
+            xmlHttp.send(null);
+        }
+    </script>
+</html>
